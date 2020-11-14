@@ -20,13 +20,14 @@ module.exports = app => {
   })
 
   app.post('/atendimentos', (req,res) => {
-    try {
-      const atendimentos = req.body
-      Atendimentos.adiciona(atendimentos);
-      res.status(201).send(atendimentos);
-    } catch (error) {
-      res.status(400).send(error.message);
-    }
+    const atendimentos = req.body
+    Atendimentos.adiciona(atendimentos)
+      .then(atendimentoCadastrado => {
+        res.status(201).send(atendimentoCadastrado);
+      })
+      .catch(err => {
+        res.status(400).send(err)
+      })
   })
 
   app.patch('/atendimentos/:id', (req,res) => {
