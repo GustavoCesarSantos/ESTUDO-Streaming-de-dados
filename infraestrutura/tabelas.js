@@ -4,6 +4,7 @@ class Tabelas {
   init(conexao) {
     this.conexao = conexao;
     this.criarAtendimentos();
+    this.criarPets();
   }
 
   criarAtendimentos() {
@@ -13,6 +14,17 @@ class Tabelas {
         return console.error(err);
 
       console.info('Tabela atendimentos criada.')
+    })
+  }
+
+  criarPets() {
+    const sqlQuery = 'CREATE TABLE IF NOT EXISTS Pets (id int NOT NULL AUTO_INCREMENT, nome varchar(50), imagem varchar(200), PRIMARY KEY (id))'
+
+    this.conexao.query(sqlQuery, (err, result) => {
+      if(err)
+        return console.error(err);
+
+      console.info('Tabela pets criada.')
     })
   }
 }
