@@ -1,3 +1,4 @@
+const Axios = require('axios');
 const moment = require('moment');
 const atendimentos = require('../controllers/atendimentos');
 
@@ -54,11 +55,16 @@ class Atendimentos {
   buscaPorId(id, res) {
     const sqlQuery = `SELECT * FROM Atendimentos WHERE id=${id}`;
 
-    conexao.query(sqlQuery, (err, result) => {
+    conexao.query(sqlQuery, async (err, result) => {
+      const atendimento = result[0];
+      const cpf = atendimento.cliente;
+
       if(err)
         throw new Error(err.message);
 
-        res.status(200).send(result[0]);
+      const { data } = await Axios.get(`http://localhost:8082/${cpf}`);
+      atendimento.cliente = data;
+      res.status(200).send(atendimento);
     })
   }
 
