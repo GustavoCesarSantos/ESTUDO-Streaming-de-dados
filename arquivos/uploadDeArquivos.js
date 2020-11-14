@@ -1,13 +1,15 @@
 const fs = require('fs');
+const path = require('path');
 
-fs.readFile('./assets/download.jpg', (err, buffer) => {
-  console.log(buffer);
+module.exports = (caminho, nomeDoArquivo, callbackImagemCriada) => {
+  const tiposValidos = ['jpg', 'png', 'jpeg']
+  const tipo = path.extname(caminho);
 
-  fs.writeFile('./assets/teste.jpg', buffer, (err) => {
-    console.log('Imagem escrita com sucesso. - Buffer');
-  })
-})
+  if(!tiposValidos.includes(tipo.substring(1)))
+    throw new Error('Tipo invalido de arquivo')
 
-fs.createReadStream('./assets/download.jpg')
-  .pipe(fs.createWriteStream('./assets/testeStream.jpg'))
-  .on('finish', () => console.log('Imagem escrita com sucesso. - Stream'))
+  const novoCaminho = `./assets/imagens/${nomeDoArquivo}${tipo}`;
+  fs.createReadStream(caminho)
+    .pipe(fs.createWriteStream(novoCaminho))
+    .on('finish', () => callbackImagemCriada(novoCaminho))
+}
