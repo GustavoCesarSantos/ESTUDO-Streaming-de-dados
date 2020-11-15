@@ -10,6 +10,11 @@ class Atendimento {
     const sqlQuery = 'SELECT * FROM Atendimentos';
     return query(sqlQuery);
   }
+
+  buscaPorId(id) {
+    const sqlQuery = `SELECT * FROM Atendimentos WHERE id=${id}`;
+    return query(sqlQuery);
+  }
 }
 
 module.exports = new Atendimento();

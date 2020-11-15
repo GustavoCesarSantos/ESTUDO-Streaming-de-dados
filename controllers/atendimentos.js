@@ -9,12 +9,10 @@ module.exports = app => {
   })
 
   app.get('/atendimentos/:id', (req,res) => {
-    try {
-      const { id } = req.params;
-      Atendimentos.buscaPorId(id, res);
-    } catch (error) {
-      res.status(404).send(error.message);
-    }
+    const { id } = req.params;
+    Atendimentos.buscaPorId(id)
+      .then((atendimento) => res.status(200).send(atendimento))
+      .catch ((err) => res.status(404).send(err.message))
   })
 
   app.post('/atendimentos', (req,res) => {
