@@ -27,21 +27,17 @@ module.exports = app => {
   })
 
   app.patch('/atendimentos/:id', (req,res) => {
-    try {
-      const { id } = req.params;
-      const valores = req.body;
-      Atendimentos.altera(id, valores, res);
-    } catch (error) {
-      res.status(400).send(error.message);
-    }
+    const { id } = req.params;
+    const valores = req.body;
+    Atendimentos.altera(id, valores)
+      .then(atendimento => res.status(204).end())
+      .catch (err => res.status(400).send(err.message))
   })
 
   app.delete('/atendimentos/:id', (req,res) => {
-    try {
-      const { id } = req.params;
-      Atendimentos.deleta(id, res);
-    } catch (error) {
-      res.status(400).send(error.message);
-    }
+    const { id } = req.params;
+    Atendimentos.deleta(id)
+      .then(result => res.status(204).end())
+      .catch ( err => res.status(400).send(err.message))
   })
 };

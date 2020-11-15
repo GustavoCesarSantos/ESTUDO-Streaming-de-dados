@@ -64,36 +64,25 @@ class Atendimentos {
         const atendimento = result[0];
         const cpf = atendimento.cliente;
 
-        const { data } = await Axios.get(`http://localhost:8082/${cpf}`);
-        atendimento.cliente = data;
-
-        return atendimento;
+        return new Promise((resolve, reject) => {
+          resolve(Axios.get(`http://localhost:8082/${cpf}`))
+        })
+        .then(data =>  {
+          atendimento.client = data;
+          return atendimento;
+        })
       })
   }
 
-  altera(id, valores, res) {
+  altera(id, valores) {
     if(valores.data)
       valores.data = moment(atendimento.data, 'DD/MM/YYYY').format('YYYY-MM-DD HH:MM:SS');
     
-    const sqlQuery = `UPDATE Atendimentos SET ? WHERE id=?`;
-
-    conexao.query(sqlQuery, [valores, id], (err) => {
-      if(err)
-        throw new Error(err.message);
-
-        res.status(204).end();
-    })
+    return repositorio.altera(id, valores)
   }
 
-  deleta(id, res) {
-    const sqlQuery = `DELETE FROM Atendimentos WHERE id=?`;
-
-    conexao.query(sqlQuery, id, (err) => {
-      if(err)
-        throw new Error(err.message);
-
-        res.status(204).end();
-    })
+  deleta(id) {
+    return repositorio.deleta(id)
   }
 }
 
